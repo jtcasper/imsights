@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/jtcasper/imsights/search/php"
 	_ "github.com/jtcasper/imsights/types"
 	"io/ioutil"
 	"log"
@@ -29,7 +31,17 @@ func visit(path string, f os.FileInfo, e error) (err error) {
 		return
 	}
 
-	fmt.Println(string(body))
+	p := php.New()
+
+	c := p.SearchAll(body)
+
+	jsonBody, err := json.Marshal(c)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	fmt.Println(string(jsonBody))
 
 	return
 }
